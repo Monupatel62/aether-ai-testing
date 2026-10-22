@@ -1,6 +1,6 @@
 # Repository specification: aether-ai-testing
 
-**Status:** Documentation baseline copied from the Aether AI master specification. Implementation status must be verified separately.
+**Status:** Repository exists; documentation-only on the inspected `main` branch. No application implementation is present in the audited tree.
 
 ## Mission
 
@@ -8,7 +8,7 @@ Shared fixtures, contract/integration/smoke tests, CI quality gates, and test-en
 
 ## Dependencies and connections
 
-All repositories and CI pipelines.
+Shared test fixtures/contracts only; test-only dependency, never a production runtime dependency.
 
 ## Owned capabilities
 
