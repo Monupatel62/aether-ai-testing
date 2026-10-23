@@ -1,33 +1,23 @@
 # aether-ai-testing
 
-Aether AI repository for Shared fixtures, contract/integration/smoke tests, CI quality gates, and test-environment conventions.
+**Status:** Initial API contract fixture runner implemented on a feature branch. No production service environment is targeted by default.
 
-## Status
+## Implemented
 
-Documentation baseline established. This repository is not considered implemented or production-ready until code, tests, security review, and release checks are completed.
+- [Contract test source](src/index.js): bounded fixture validation, method/path/status checks, required response headers, injected request adapter, and privacy-conscious result summaries.
+- [Unit tests](test/testing.test.js): fixture schema, unsafe paths, status/header matching, request failures, and response-body omission.
+- Dependency-free Node.js package with Node 20/22 CI.
+
+## Limitations
+
+The runner does not start services, provision dependencies, run end-to-end environments, generate fixtures from OpenAPI, test streaming, or verify security properties beyond the declared assertions. Network calls occur only through a caller-supplied adapter; production use must point to an explicitly approved test environment.
 
 ## Documentation
 
-- [Repository specification](docs/REPOSITORY_SPECIFICATION.md) — mission, boundaries, dependencies, contracts, security, tests, and implementation gates.
-- [Aether AI platform architecture](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/MASTER_ARCHITECTURE.md)
-- [Master repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
-
-## Working rules
-
-- Keep this repository within its documented ownership boundary.
-- Do not commit secrets, credentials, production data, or unreviewed generated code.
-- Version public contracts and document breaking changes.
-- Use synthetic or sanitized data in tests.
-- Update the master catalog when ownership or cross-repository contracts change.
-
-## Repository documents
-
+- [Repository specification](docs/REPOSITORY_SPECIFICATION.md)
 - [Project specification](docs/PROJECT_SPEC.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Dependencies and contracts](docs/DEPENDENCIES_AND_CONTRACTS.md)
 - [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
-- [Research and licenses](docs/RESEARCH_AND_LICENSES.md)
-- [Technical design](docs/TECHNICAL_DESIGN.md)
 - [Security review](docs/SECURITY_REVIEW.md)
-- [Engineering standard](docs/ENGINEERING_STANDARD.md)
-- [Work log](docs/WORKLOG.md)
+- [Master catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
