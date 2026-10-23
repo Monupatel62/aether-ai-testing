@@ -1,33 +1,43 @@
-# aether-ai-testing
+# @aether-ai/testing
 
-Aether AI repository for Shared fixtures, contract/integration/smoke tests, CI quality gates, and test-environment conventions.
+Synthetic fixtures, deterministic test helpers, and JSON Schema contract validation for Aether AI tests. This package is test-only and must not be a production runtime dependency.
 
-## Status
+## Current implementation
 
-Documentation baseline established. This repository is not considered implemented or production-ready until code, tests, security review, and release checks are completed.
+- Deterministic synthetic fixture IDs (non-cryptographic; never use for security decisions).
+- JSON `Response` builders for mocked fetch calls.
+- Deferred promises for race and failure tests.
+- Bounded async-iterable collection to keep broken streams from hanging test suites.
+- Credential-like field-name detection for sanitized fixture/artifact checks; this is a guardrail, not a complete DLP scanner.
+- JSON Schema Draft 2020-12 validator with strict mode, format assertions, and sanitized issue metadata.
 
-## Documentation
+## Example
 
-- [Repository specification](docs/REPOSITORY_SPECIFICATION.md) — mission, boundaries, dependencies, contracts, security, tests, and implementation gates.
-- [Aether AI platform architecture](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/MASTER_ARCHITECTURE.md)
-- [Master repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
+```ts
+import { createSchemaValidator, fixtureId, jsonResponse } from "@aether-ai/testing";
 
-## Working rules
+const validate = createSchemaValidator({
+  $schema: "https://json-schema.org/draft/2020-12/schema",
+  type: "object",
+  required: ["id"],
+  properties: { id: { type: "string", minLength: 1 } },
+  additionalProperties: false
+});
 
-- Keep this repository within its documented ownership boundary.
-- Do not commit secrets, credentials, production data, or unreviewed generated code.
-- Version public contracts and document breaking changes.
-- Use synthetic or sanitized data in tests.
-- Update the master catalog when ownership or cross-repository contracts change.
+const fixture = { id: fixtureId("run", "case-1") };
+if (!validate(fixture).valid) throw new Error("Invalid test fixture");
+const mockedResponse = jsonResponse(fixture);
+```
 
-## Repository documents
+Use synthetic data only. Never place production credentials or customer payloads in fixtures, snapshots, logs, or CI artifacts.
 
-- [Project specification](docs/PROJECT_SPEC.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Dependencies and contracts](docs/DEPENDENCIES_AND_CONTRACTS.md)
-- [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
-- [Research and licenses](docs/RESEARCH_AND_LICENSES.md)
-- [Technical design](docs/TECHNICAL_DESIGN.md)
-- [Security review](docs/SECURITY_REVIEW.md)
-- [Engineering standard](docs/ENGINEERING_STANDARD.md)
-- [Work log](docs/WORKLOG.md)
+## Development
+
+```bash
+npm install
+npm run typecheck
+npm test
+npm run build
+```
+
+CI is configured for Node.js 20 and 22. OpenAPI validation, provider/consumer compatibility, secret scanning, and isolated integration harnesses remain future work; this repository is not yet complete or production-certified.
