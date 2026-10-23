@@ -28,14 +28,24 @@ export function validateContractCases(input, { maxCases = 500, maxBodyBytes = 26
 }
 
 /** Runs fixtures only through an explicitly injected request function; never opens a network connection itself. */
-export async function runContractCases(cases, { request } = {}) {
+export async function runContractCases(cases, { request, timeoutMs = 10_000 } = {}) {
   if (typeof request !== "function") throw new TypeError("Injected request function is required");
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120_000) throw new TypeError("timeoutMs must be between 1 and 120000");
   const validCases = validateContractCases(cases);
   const results = [];
   for (const item of validCases) {
     let response;
-    try { response = await request({ method: item.method, path: item.path, ...(item.body !== undefined ? { body: item.body } : {}) }); }
-    catch { results.push(Object.freeze({ id: item.id, passed: false, code: "request_failed" })); continue; }
+    const controller = new AbortController();
+    let timeout;
+    try {
+      response = await Promise.race([
+        Promise.resolve().then(() => request({ method: item.method, path: item.path, ...(item.body !== undefined ? { body: item.body } : {}), signal: controller.signal })),
+        new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new ContractTestError("request_timeout")); }, timeoutMs); }),
+      ]);
+    } catch (error) {
+      results.push(Object.freeze({ id: item.id, passed: false, code: error instanceof ContractTestError && error.code === "request_timeout" ? "request_timeout" : "request_failed" }));
+      continue;
+    } finally { clearTimeout(timeout); }
     if (!isRecord(response) || !Number.isSafeInteger(response.status) || !isRecord(response.headers)) {
       results.push(Object.freeze({ id: item.id, passed: false, code: "invalid_response" })); continue;
     }
