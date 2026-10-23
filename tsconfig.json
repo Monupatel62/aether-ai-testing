@@ -3,7 +3,11 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
@@ -13,8 +17,15 @@
     "outDir": "dist",
     "rootDir": "src",
     "skipLibCheck": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["dist", "node_modules", "tests"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "tests"
+  ]
 }
