@@ -5,7 +5,9 @@
   "license": "UNLICENSED",
   "type": "module",
   "sideEffects": false,
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -19,7 +21,9 @@
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1"
   },
   "engines": {
     "node": ">=20"
