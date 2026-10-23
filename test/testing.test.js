@@ -34,3 +34,11 @@ test("reports request failures and status mismatches without response bodies", a
 test("requires explicit request adapter", async () => {
   await assert.rejects(runContractCases(cases), TypeError);
 });
+
+
+test("bounds hanging fixture requests and propagates an abort signal", async () => {
+  let receivedSignal;
+  const result = await runContractCases([cases[0]], { timeoutMs: 5, request: ({ signal }) => { receivedSignal = signal; return new Promise(() => {}); } });
+  assert.equal(result.results[0].code, "request_timeout");
+  assert.equal(receivedSignal.aborted, true);
+});
