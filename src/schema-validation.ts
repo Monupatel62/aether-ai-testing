@@ -1,5 +1,11 @@
-import Ajv2020, { type AnySchema, type ErrorObject, type ValidateFunction } from "ajv/dist/2020.js";
-import addFormats from "ajv-formats";
+import Ajv2020Module from "ajv/dist/2020.js";
+import addFormatsModule from "ajv-formats";
+import type { Ajv, AnySchema, ErrorObject, ValidateFunction } from "ajv";
+
+// NodeNext resolves these CommonJS packages as module namespaces in their declarations;
+// at runtime their default exports are the constructor/plugin function documented by Ajv.
+const Ajv2020 = Ajv2020Module as unknown as new (options: object) => Ajv;
+const addFormats = addFormatsModule as unknown as (ajv: Ajv) => Ajv;
 
 export interface SchemaValidationIssue {
   readonly path: string;
